@@ -1,35 +1,31 @@
-using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Kiota.Abstractions.Authentication;
 using Microsoft.Kiota.Http.HttpClientLibrary;
-using Soenneker.Extensions.Configuration;
 using Soenneker.Extensions.ValueTask;
 using Soenneker.Radarr.HttpClients.Abstract;
 using Soenneker.Radarr.OpenApiClientUtil.Abstract;
 using Soenneker.Radarr.OpenApiClient;
-using Soenneker.Kiota.GenericAuthenticationProvider;
 using Soenneker.Utils.AsyncSingleton;
 
 namespace Soenneker.Radarr.OpenApiClientUtil;
 
-///<inheritdoc cref="IRadarrOpenApiClientUtil"/>
 public sealed class RadarrOpenApiClientUtil : IRadarrOpenApiClientUtil
 {
     private readonly AsyncSingleton<RadarrOpenApiClient> _client;
 
-    public RadarrOpenApiClientUtil(IRadarrOpenApiHttpClient httpClientUtil, IConfiguration configuration)
+    public RadarrOpenApiClientUtil(IRadarrOpenApiHttpClient httpClientUtil, IConfiguration _)
     {
         _client = new AsyncSingleton<RadarrOpenApiClient>(async token =>
         {
             HttpClient httpClient = await httpClientUtil.Get(token).NoSync();
 
-            var apiKey = configuration.GetValueStrict<string>("Radarr:ApiKey");
-            string authHeaderValueTemplate = configuration["Radarr:AuthHeaderValueTemplate"] ?? "{token}";
-            string authHeaderValue = authHeaderValueTemplate.Replace("{token}", apiKey, StringComparison.Ordinal);
-
-            var requestAdapter = new HttpClientRequestAdapter(new GenericAuthenticationProvider(headerValue: authHeaderValue), httpClient: httpClient);
+            var requestAdapter = new HttpClientRequestAdapter(new AnonymousAuthenticationProvider(), httpClient: httpClient)
+            {
+                BaseUrl = httpClient.BaseAddress!.ToString().TrimEnd('/')
+            };
 
             return new RadarrOpenApiClient(requestAdapter);
         });
@@ -40,18 +36,11 @@ public sealed class RadarrOpenApiClientUtil : IRadarrOpenApiClientUtil
         return _client.Get(cancellationToken);
     }
 
-    /// <summary>
-    /// Releases resources used by the current instance.
-    /// </summary>
     public void Dispose()
     {
         _client.Dispose();
     }
 
-    /// <summary>
-    /// Asynchronously releases resources used by the current instance.
-    /// </summary>
-    /// <returns>A task that represents the asynchronous operation.</returns>
     public ValueTask DisposeAsync()
     {
         return _client.DisposeAsync();

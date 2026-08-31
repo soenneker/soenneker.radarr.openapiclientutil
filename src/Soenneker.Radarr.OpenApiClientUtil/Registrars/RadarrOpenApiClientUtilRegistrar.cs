@@ -6,12 +6,12 @@ using Soenneker.Radarr.OpenApiClientUtil.Abstract;
 namespace Soenneker.Radarr.OpenApiClientUtil.Registrars;
 
 /// <summary>
-/// Registers the OpenAPI client utility for dependency injection.
+/// Registers the lazily initialized Radarr API client.
 /// </summary>
 public static class RadarrOpenApiClientUtilRegistrar
 {
     /// <summary>
-    /// Adds <see cref="RadarrOpenApiClientUtil"/> as a singleton service. <para/>
+    /// Adds the Radarr API client utility as a singleton service. <para/>
     /// </summary>
     public static IServiceCollection AddRadarrOpenApiClientUtilAsSingleton(this IServiceCollection services)
     {
@@ -22,7 +22,7 @@ public static class RadarrOpenApiClientUtilRegistrar
     }
 
     /// <summary>
-    /// Adds <see cref="RadarrOpenApiClientUtil"/> as a scoped service. <para/>
+    /// Adds the Radarr API client utility as a scoped service backed by the singleton HTTP client provider. <para/>
     /// </summary>
     public static IServiceCollection AddRadarrOpenApiClientUtilAsScoped(this IServiceCollection services)
     {
