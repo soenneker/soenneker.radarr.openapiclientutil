@@ -12,6 +12,7 @@ using Soenneker.Utils.AsyncSingleton;
 
 namespace Soenneker.Radarr.OpenApiClientUtil;
 
+/// <inheritdoc cref="IRadarrOpenApiClientUtil" />
 public sealed class RadarrOpenApiClientUtil : IRadarrOpenApiClientUtil
 {
     private readonly AsyncSingleton<RadarrOpenApiClient> _client;
