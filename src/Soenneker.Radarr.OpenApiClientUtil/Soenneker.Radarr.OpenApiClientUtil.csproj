@@ -43,6 +43,5 @@
     <ItemGroup>
         <PackageReference Include="Soenneker.Radarr.HttpClients" Version="4.0.102" />
         <PackageReference Include="Soenneker.Radarr.OpenApiClient" Version="4.0.42" />
-        <PackageReference Include="Soenneker.Utils.AsyncSingleton" Version="4.0.831" />
     </ItemGroup>
 </Project>
