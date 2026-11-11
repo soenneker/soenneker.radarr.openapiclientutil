@@ -44,7 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Soenneker.Radarr.HttpClients" Version="11.0.173" />
+        <PackageReference Include="Soenneker.Radarr.HttpClients" Version="11.0.174" />
         <PackageReference Include="Soenneker.Radarr.OpenApiClient" Version="11.0.73" />
     </ItemGroup>
 </Project>
